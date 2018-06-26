@@ -1,0 +1,95 @@
+﻿@model IEnumerable<AspNetExtendingIdentityRoles.Models.Message>
+
+@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/Site.css")
+
+<h2>Contact</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Receiver.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sender.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateSent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeletedBySender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DeletedByReceiver)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MessageBody)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsRead)
+        </th>
+        <th></th>
+    </tr>
+
+    @*@foreach (var item in Model)
+        {
+            <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Receiver.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sender.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateSent)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeletedBySender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeletedByReceiver)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MessageBody)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsRead)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.MessageId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.MessageId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })
+                    </td>
+                </tr>
+
+
+
+
+        }*@
+    <ul>
+        @foreach (var group in Model.GroupBy(item => item.Receiver.UserName))
+        {
+
+            <li>
+                @Html.Encode(group.Key):
+                <ul>
+
+                    @foreach (var item in group)
+                    {
+                        <li>@Html.Encode(item.MessageBody) </li>
+                    }
+
+                </ul>
+            </li>
+
+        }
+    </ul>
+
+</table>

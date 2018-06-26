@@ -1,0 +1,267 @@
+﻿@*@model IEnumerable<AspNetExtendingIdentityRoles.Models.Message>*@
+@model PagedList.IPagedList<AspNetExtendingIdentityRoles.Models.Message>
+@using PagedList.Mvc;
+@using Microsoft.AspNet.Identity;
+@using System.Web.Mvc;
+@using System.Web.WebPages;
+
+@*<!DOCTYPE html>
+    <html5>*@
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+
+@{
+    ViewBag.Title = "MessagesReceived";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/Site.css")
+@Styles.Render("~/Content/formContainer.css")
+
+<link href="~/Content/toolkit2.min.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/entypo" type="text/css" />
+
+
+
+
+<style>
+    .media-list-conversation .media-body-text {
+        max-width: 500px;
+    }
+
+
+
+    input[type=text] {
+        width: 100%;
+        border: 2px solid #aaa;
+        border-radius: 4px;
+        margin: 8px 0;
+        outline: none;
+        padding: 8px;
+        box-sizing: border-box;
+        transition: .3s;
+    }
+
+        input[type=text]:focus {
+            border-color: dodgerBlue;
+            box-shadow: 0 0 8px 0 dodgerBlue;
+        }
+
+    .navbar-inverse {
+        background-color: black;
+        border-color: black;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+
+
+<div class="messagecontainer">
+
+
+    <h2 style="color: #ffffff;">MessagesReceived</h2>
+
+
+
+
+    @using (Html.BeginForm("IndexReceiver", "Messages", FormMethod.Post))
+    {
+        <div>
+            Find messages by sender name @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+            <input id="Search" type="submit" value="Filter" />
+        </div>
+    }
+
+    <p></p><p></p>
+
+
+
+
+
+    @foreach (var item in Model)
+    {
+
+
+        if (item.DeletedBySender == true)
+        {
+            <ul class="media-list media-list-conversation c-w-md">
+                <li class="media mb-4">
+
+                    @*<a class="media-left">
+                            <img class="rounded-circle media-object mr-3" src="~/Content/image.png" alt="Itallian fatty">
+                        </a>*@
+                    <div class="media-body">
+                        <div class="media-body-text">
+                            <span class="icon icon-circle-with-cross"></span> <strong>This message has been deleted by @item.Sender.UserName !!!</strong>
+                        </div>
+                    </div>
+            </ul>
+
+        }
+
+        else if (item.DeletedByReceiver == true)
+        {
+            <del>@Html.DisplayFor(modelItem => item.MessageBody)</del>
+        }
+
+
+        else if (item.IsRead == false)
+        {
+
+
+
+
+            if (item.Sender.UserName == User.Identity.GetUserName())
+            {
+
+
+                <ul class="media-list media-list-conversation c-w-md">
+                    @*<div class="container">
+                        <div class="row">*@
+                    <li class="media media-current-user m-b-md row">
+                        @*<div class="col-lg-4 col-md-4 col-sm-6 col-xs-4 hidden-lg">*@
+                        <div class="media-body">
+                            <div class="media-body-text" style="background-color:#4477FF;">
+                                <span class="icon icon-cloud"></span> @Html.DisplayFor(modelItem => item.MessageBody)
+                            </div>
+                            <div class="media-footer">
+                                <small class="text-muted">
+                                    from @Html.DisplayFor(modelItem => item.Sender.UserName) to
+                                    @Html.DisplayFor(modelItem => item.Receiver.UserName) at @Html.DisplayFor(modelItem => item.DateSent)
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })
+                                </small>
+                            </div>
+                        </div>
+                        @*</div>*@
+                        @*<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 hidden-lg">
+                                <a class="media-right" href="#">
+                                    <img class="img-circle media-object" src="../assets/img/avatar-dhg.png">
+                                </a>
+                            </div>*@
+                    </li>
+                    @*</div>
+                        </div>*@
+                </ul>
+
+            }
+            else
+            {
+                <ul class="media-list media-list-conversation c-w-md">
+                    <li class="media m-b-md">
+                        @*<a class="media-left" href="#">
+                                <img class="img-circle media-object" src="../assets/img/avatar-fat.jpg">
+                            </a>*@
+                        <div class="media-body">
+                            <div class="media-body-text">
+                                <span class="icon icon-cloud"></span> @Html.DisplayFor(modelItem => item.MessageBody)
+                            </div>
+                            <div class="media-footer">
+                                <small class="text-muted">
+                                    from @Html.DisplayFor(modelItem => item.Sender.UserName) to
+                                    @Html.DisplayFor(modelItem => item.Receiver.UserName) at @Html.DisplayFor(modelItem => item.DateSent)
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })
+                                </small>
+                            </div>
+                        </div>
+                </ul>
+            }
+
+        }
+
+        else if (item.IsRead == true)
+        {
+
+
+
+
+            if (item.Sender.UserName == User.Identity.GetUserName())
+            {
+                <ul class="media-list media-list-conversation c-w-md">
+                    <li class="media media-current-user m-b-md">
+                        @*<div class="col-lg-4 col-md-4 col-sm-6 col-xs-4 hidden-lg">*@
+                        <div class="media-body">
+                            <div class="media-body-text">
+
+                                <span class="icon icon-icloud"></span>  @Html.DisplayFor(modelItem => item.MessageBody) @*<span class="icon icon-chat"></span>*@
+
+                            </div>
+                            <div class="media-footer">
+                                <small class="text-muted">
+                                    from @Html.DisplayFor(modelItem => item.Sender.UserName) to
+                                    @Html.DisplayFor(modelItem => item.Receiver.UserName) at @Html.DisplayFor(modelItem => item.DateSent)
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })
+                                </small>
+                            </div>
+                        </div>
+                        @*</div>*@
+                        @*<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 hidden-lg">
+                            <a class="media-right" href="#">
+                                <img class="img-circle media-object" src="../assets/img/avatar-dhg.png">
+                            </a>
+                                </div>*@
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <ul class="media-list media-list-conversation c-w-md">
+                    <li class="media m-b-md">
+                        @*<a class="media-left" href="#">
+                                <img class="img-circle media-object" src="../assets/img/avatar-fat.jpg">
+                            </a>*@
+                        <div class="media-body">
+                            <div class="media-body-text">
+
+                                <span class="icon icon-icloud"></span>  @Html.DisplayFor(modelItem => item.MessageBody)
+
+                            </div>
+                            <div class="media-footer">
+                                <small class="text-muted">
+                                    from @Html.DisplayFor(modelItem => item.Sender.UserName) to
+                                    @Html.DisplayFor(modelItem => item.Receiver.UserName) at @Html.DisplayFor(modelItem => item.DateSent)
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.MessageId }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            }
+
+
+
+
+
+
+
+
+
+
+        }
+
+    }
+
+
+
+
+    <div class="card-block">
+        Messages Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("IndexReceiver",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    </div>
+
+    @*</html5>*@
+
+</div>
+

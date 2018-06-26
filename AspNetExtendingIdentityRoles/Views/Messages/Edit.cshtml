@@ -1,0 +1,88 @@
+﻿@model AspNetExtendingIdentityRoles.Models.Message
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+@Styles.Render("~/Content/Site.css")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Message</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.MessageId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateSent, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateSent)
+                @Html.ValidationMessageFor(model => model.DateSent)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeletedBySender, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeletedBySender)
+                @Html.ValidationMessageFor(model => model.DeletedBySender)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeletedByReceiver, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeletedByReceiver)
+                @Html.ValidationMessageFor(model => model.DeletedByReceiver)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MessageBody, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MessageBody)
+                @Html.ValidationMessageFor(model => model.MessageBody)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsRead, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsRead)
+                @Html.ValidationMessageFor(model => model.IsRead)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReceiverID, "ReceiverID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ReceiverID", String.Empty)
+                @Html.ValidationMessageFor(model => model.ReceiverID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SenderID, "SenderID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("SenderID", String.Empty)
+                @Html.ValidationMessageFor(model => model.SenderID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

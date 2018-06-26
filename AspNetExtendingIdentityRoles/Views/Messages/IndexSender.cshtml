@@ -1,0 +1,129 @@
+﻿
+@model PagedList.IPagedList<AspNetExtendingIdentityRoles.Models.Message>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "MessagesSent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/Site.css")
+
+<style>
+    body {
+        overflow: auto;
+        /*color: #907e7e;*/
+        color: #ffffff;
+    }
+</style>
+
+
+
+
+<h2>MessagesSent</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@*Input a Filter*@
+@using (Html.BeginForm("IndexSender", "Messages", FormMethod.Post))
+{
+    <div>
+        Find messages by receiver name @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+        <input id="Search" type="submit" value="Filter" />
+    </div>
+}
+
+<p></p><p></p><p></p>
+
+<table class="table">
+    @*Sorting*@
+    @using (Html.BeginForm("IndexSender", "Messages", FormMethod.Get))
+    {
+        <tr>
+            <th>
+                @Html.ActionLink("Sender", "IndexSender", new { SortOrder = ViewBag.Sender, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("Receiver", "IndexSender", new { SortOrder = ViewBag.Receiver, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("DateSent", "IndexSender", new { SortOrder = ViewBag.DateSent, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("DeletedBySender", "IndexSender", new { SortOrder = ViewBag.DeletedBySender, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("DeletedByReceiver", "IndexSender", new { SortOrder = ViewBag.DeletedByReceiver, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("MessageBody", "IndexSender", new { SortOrder = ViewBag.MessageBody, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.ActionLink("IsRead", "IndexSender", new { SortOrder = ViewBag.IsRead, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th></th>
+        </tr>
+    }
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sender.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Receiver.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateSent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedBySender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedByReceiver)
+            </td>
+            <td>
+                @if (item.DeletedBySender == true)
+                {
+                    <img src="/Content/messageDeleted.png" width="30" class="glyphicon-remove-sign" /><p style="color: red"><b>This message has been deleted by @item.Sender.UserName !!!</b></p>
+                }
+
+                else if (item.DeletedByReceiver == true)
+                {
+                    <del>@Html.DisplayFor(modelItem => item.MessageBody)</del>
+                }
+                else if (item.IsRead == false)
+                {
+                    <a href="@Url.Action("Details", new { id = item.MessageId })"><img src="/Content/isUnRead.png" width="30" , alt="Edit" />@Html.DisplayFor(modelItem => item.MessageBody)</a>
+
+                }
+                else if (item.IsRead == true)
+                {
+                    <img src="/Content/read.png" width="30" /> @Html.DisplayFor(modelItem => item.MessageBody)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsRead)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.MessageId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.MessageId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })
+            </td>
+        </tr>
+    }
+
+
+</table>
+<div>
+    @Html.ActionLink("Back to List", "IndexSender")
+</div>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("IndexSender",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

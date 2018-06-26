@@ -1,0 +1,244 @@
+﻿@model AspNetExtendingIdentityRoles.Models.Message
+
+<!-- for emoticons -->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">
+
+
+
+@*<link href="~/Content/emoji.css" rel="stylesheet">*@
+@Styles.Render("~/Content/emoji/emoji.css")
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        overflow: auto;
+        /*color: #907e7e;*/
+        color: #ffffff;
+    }
+</style>
+
+
+
+
+
+
+@Styles.Render("~/Content/formContainer.css")
+
+<!-- https://github.com/estebanav/javascript-mobile-desktop-geolocation/tree/master/js -->
+<script src="~/Scripts/geoPosition.js"></script>
+
+@Styles.Render("~/Content/Site.css")
+@Styles.Render("~/Content/emoji/emoji.css")
+
+
+<style>
+    body {
+        overflow: auto;
+    }
+</style>
+
+
+
+
+<!-- Begin emoji-picker JavaScript -->
+@Scripts.Render("~/Scripts/emoji/config.js")
+@Scripts.Render("~/Scripts/emoji/util.js")
+@Scripts.Render("~/Scripts/emoji/jquery.emojiarea.js")
+@Scripts.Render("~/Scripts/emoji/emoji-picker.js")
+
+@Scripts.Render("~/Scripts/emoji/emoji-picker.coffee")
+
+@Scripts.Render("~/Scripts/emoji/jquery-1.11.3.min.js")
+@Scripts.Render("~/Scripts/emoji/emojiFromSpriteSheet.js")
+
+@*@Styles.Render("~/Content/emoji/bootstrap.min.css")*@
+
+@*<style>
+    h2 {
+        background-color: rgba(255, 228, 196, 0.3);
+        width:100px;
+        border-radius: 5px;
+        padding:10px;
+    }
+</style>*@
+
+    <h2>Create</h2>
+
+
+
+
+
+
+<div class="formcontainer">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Message</h4>
+            <hr />
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SenderID, "From:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @*@Html.DropDownList("SenderID", String.Empty)*@
+                    @*@Html.DisplayFor(model => model.SenderID)
+
+                        @Html.ValidationMessageFor(model => model.SenderID)*@
+                    @ViewBag.username
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReceiverID, "To:", htmlAttributes: new { @class = "control-label col-md-2" })
+
+                <div class="col-md-10">
+                    @Html.DropDownList("ReceiverID", String.Empty)
+                    @Html.ValidationMessageFor(model => model.ReceiverID)
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                @*@Html.LabelFor(model => model.MessageBody, htmlAttributes: new { @class = "control-label col-md-2" })*@
+
+
+                <label for="male" class="control-label col-md-2">Messages:</label>
+
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.MessageBody, new { @dataemojiable = "true" })@*updated*@
+                    @Html.ValidationMessageFor(model => model.MessageBody)
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <a href="#" id="get_location">@Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })</a>
+                <div id="map" class="col-md-10">
+                    <iframe id="google_map"
+                            width="100%"
+                            height="100%"
+                            frameholder="0"
+                            scrolling="no"
+                            marginheight="0"
+                            marginwidth="0"
+                            src="https://maps.google.com?output=embed"></iframe>
+                    @Html.ValidationMessageFor(model => model.Location)
+                </div>
+                <script>
+                document.getElementById('get_location').onclick = function () {
+                    var success = function (pos) {
+                        var lat = pos.coords.latitude,
+                            long = pos.coords.longitude,
+                            coords = lat + ', ' + long;
+
+
+                        //alert("Location Coordinates: " + coords);
+
+                        // POST w/ JSON
+                        var postData = { Location: coords };
+                        var r = 'AAA';
+                        $.ajax(
+                            {
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                url: "AjaxTest",
+                                //dataType: "json",
+                                data: JSON.stringify(postData),
+                                success: function (pos) {
+                                    alert("success: This will come from the controller: " + pos);
+                                },
+                                error: function (ex) {
+                                    alert("Fail" + ex);
+                                }
+
+                            });
+
+
+
+                        //if (coords != null)
+                           @*@Model.Location = coords;*@
+
+                        // Show the map with the proper location
+                        document.getElementById('google_map').setAttribute('src', 'https://maps.google.com/?q=' + coords + '&z=16&output=embed')
+                        //get(coords);
+                        //post(coords);
+
+                        //return pos;
+
+                    }
+
+
+                    var error = function () {
+                        alert('Geolocation not supported');
+                    }
+
+                    if (geoPosition.init()) {
+                        geoPosition.getCurrentPosition(success, error);
+                    }
+
+                    return false;
+                }
+                </script>
+            </div>
+
+
+
+
+
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.DateSent, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+
+                        @Html.EditorFor(model => model.DateSent)
+
+                        @Html.ValidationMessageFor(model => model.DateSent)
+
+                    </div>
+                </div>*@
+
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.DeletedBySender, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DeletedBySender)
+                        @Html.ValidationMessageFor(model => model.DeletedBySender)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DeletedByReceiver, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DeletedByReceiver)
+                        @Html.ValidationMessageFor(model => model.DeletedByReceiver)
+                    </div>
+                </div>*@
+
+
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.IsRead, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.IsRead)
+                        @Html.ValidationMessageFor(model => model.IsRead)
+                    </div>
+                </div>*@
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Send" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+</div>

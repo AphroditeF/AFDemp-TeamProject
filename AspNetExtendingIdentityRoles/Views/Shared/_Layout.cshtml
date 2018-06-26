@@ -1,0 +1,160 @@
+﻿@*@model AspNetExtendingIdentityRoles.Models.SelectUserRolesViewModel*@
+@*@model AspNetExtendingIdentityRoles.Models.IdentityManager*@
+@*@model AspNetExtendingIdentityRoles.Models.EditUserViewModel*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    @*<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">*@
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+
+    @Scripts.Render("~/Scripts/easeljs-0.7.1.min.js")
+    @Scripts.Render("~/Scripts/TweenMax.min_1.18.0.js")
+    @Scripts.Render("~/Scripts/flyingParticles.js")
+
+    @Styles.Render("~/Content/bootstrap.css")
+
+
+    <style>
+
+        html body {
+            overflow: auto;
+        }
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+    <canvas id="projector">Your browser does not support the Canvas element.</canvas>
+    @Styles.Render("~/Content/bootstrap.css")
+
+    @Styles.Render("~/Content/gradientBackground.css")
+
+    @Scripts.Render("~/Scripts/easeljs-0.7.1.min.js")
+    @Scripts.Render("~/Scripts/TweenMax.min_1.18.0.js")
+    @Scripts.Render("~/Scripts/flyingParticles.js")
+
+
+
+
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("CommPro", "Intro", "Home", null, new { @class = "navbar-brand" })
+
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+
+
+                        @if (User.IsInRole("Admin"))
+                        {
+
+                            <li>@Html.ActionLink("Users", "Index", "Account")</li>
+                            <li>@Html.ActionLink("Roles", "Index", "Roles")</li>
+                            <li>@Html.ActionLink("MessagesManager", "AllMessages", "Messages")</li>
+
+                        }
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.IsInRole("User"))
+                        {
+                            <li>@Html.ActionLink("MyMessages", "Index", "Messages")</li>
+                            <li>@Html.ActionLink("MessagesReceived", "IndexReceiver", "Messages")</li>
+                            <li>@Html.ActionLink("MessagesSent", "IndexSender", "Messages")</li>
+
+
+
+                        }
+
+                    </ul>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @ViewData[""]
+                        }
+                        else
+                        {
+                            @Html.Partial("_RegisterPartial")
+                        }
+
+                              @Html.Partial("_LoginPartial")  
+                    
+                </div>
+            </div>
+
+
+
+
+  
+        </div>
+    </div>
+
+
+
+
+    <div class="container body-content">
+        @RenderBody()
+        @*<hr />*@
+        <footer class="modal-footer ">
+            <p style="color:white;">&copy; @DateTime.Now.Year - CommPro by @@{razor blades}</p>
+            @*<ul style="list-style-type:none">
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+            </ul>*@
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <!-- JS for emoticons : begin -->
+    <script src="~/Scripts/config.js"></script>
+    <script src="~/Scripts/util.js"></script>
+    <script src="~/Scripts/jquery.emojiarea.js"></script>
+    <script src="~/Scripts/emoji-picker.js"></script>
+
+    <script>
+        $(function () {
+            // Initializes and creates emoji set from sprite sheet
+            window.emojiPicker = new EmojiPicker({
+                emojiable_selector: '[dataemojiable=true]',
+                assetsPath: '../Content/img/',
+                popupButtonClasses: 'fa fa-smile-o'
+            });
+            // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+            // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+            // It can be called as many times as necessary; previously converted input fields will not be converted again
+            window.emojiPicker.discover();
+        });
+    </script>
+    <!-- JS for emoticons : end -->
+</body>
+</html>
