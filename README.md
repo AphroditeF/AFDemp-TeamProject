@@ -13,4 +13,4 @@ You will also need to run Entity Framework Migrations `Update-Database` command 
 
 Administrator:
 Username:leo
-Paswword:12345abcd
+Password:12345abcd
